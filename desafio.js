@@ -1,60 +1,74 @@
-//alert('Boas vindas ao jogo de BlackJack!')
+if (confirm('Boas vindas ao jogo de BlackJack!\nQuer iniciar uma nova rodada?')) {
 
-const cartaUsuario1 = comprarCarta()
-const cartaUsuario2 = comprarCarta()
-const cartaComputador1 = comprarCarta()
-const cartaComputador2 = comprarCarta()
-  
-   if (confirm('Quer iniciar uma nova rodada?')) {
-       
-      function rodadaUsuario1 () {
-      cartaUsuario1
-      cartaUsuario2
-      let pontuacaoUsuario1 = cartaUsuario1.valor + cartaUsuario2.valor
-      return pontuacaoUsuario1
-      }
-      rodadaUsuario1()
+   //Primeira rodada
 
-      /* while (pontuacaoUsuario1 === 22){
-         rodadaUsuario1()
-      }
-      */
-      
-      function rodadaComputador1 () {
-      cartaComputador1
-      cartaComputador2
-      let pontuacaoComputador1 = cartaComputador1.valor + cartaComputador2.valor
-      return pontuacaoComputador1
-      
-      }
-      rodadaComputador1()
+   let maoJogador = []
+   let maoComputador = []
 
-      while (pontuacaoComputador1 === 22) {
-         rodadaComputador1()
-      }
-      
+   const cartaUsuario1 = comprarCarta()
+   const cartaUsuario2 = comprarCarta()
+   let pontuacaoUsuario = cartaUsuario1.valor + cartaUsuario2.valor
 
-      if (confirm(`As suas cartas são: ${cartaUsuario1.texto} ${cartaUsuario2.texto}. A carta revelada do computador é ${cartaComputador1.texto} Deseja comprar mais uma carta?`)) {
+   const cartaComputador1 = comprarCarta()
+   const cartaComputador2 = comprarCarta()
+   let pontuacaoComputador = cartaComputador1.valor + cartaComputador2.valor
+
+   maoJogador.push(cartaUsuario1.valor, cartaUsuario2.valor)
+   maoComputador.push(cartaComputador1.valor, cartaComputador2.valor)
+
+
+   // Caso dos dois Ases
+
+   /* while (pontuacaoUsuario === 22) {
+
+      const cartaUsuario1 = comprarCarta()
+      const cartaUsuario2 = comprarCarta()
+      let pontuacaoUsuario = cartaUsuario1.valor + cartaUsuario2.valor
+
+      return pontuacaoUsuario
+   } */
+
+
+
+   if (confirm(`As suas cartas são: ${cartaUsuario1.texto} ${cartaUsuario2.texto}. A carta revelada do computador é ${cartaComputador1.texto}\nDeseja comprar mais uma carta?`)) {
+
+      //Segunda rodada
+
+      const cartaUsuario3 = comprarCarta()
+      pontuacaoUsuario = pontuacaoUsuario + cartaUsuario3.valor
+
+      maoJogador.push(cartaUsuario3.valor)
+
+      if (pontuacaoUsuario < 22) {
+
+         if (confirm(`As suas cartas são: ${cartaUsuario1.texto} ${cartaUsuario2.texto} ${cartaUsuario3.texto}. A carta revelada do computador é ${cartaComputador1.texto}\nDeseja comprar mais uma carta?`)) {
+            
+            // Aqui o jogador puxa a 4ª carta
+            const cartaUsuario4 = comprarCarta()
+            pontuacaoUsuario = pontuacaoUsuario + cartaUsuario4.valor
+
+            maoJogador.push(cartaUsuario4.valor)
+         }
+
+
+      } else {
          
-      /* Racional da sequencia
-      if confirm deseja comprar uma nova carta?    
-      cartaUsuario3
-      cartaComputador3
-
-      pontuação = pontuacaoUsuario1 + cartaUsuario3.valor
-
-      caso o computador puxe algo < 20, ele compra outra carta, caso seja >= 20, ele para
-      */
-
+         alert(`Usuário - Cartas ${cartaUsuario1.texto} ${cartaUsuario2.texto} ${cartaUsuario3.texto} - Pontuação: ${pontuacaoUsuario}\nComputador - Cartas ${cartaComputador1.texto} ${cartaComputador2.texto} - Pontuação: ${pontuacaoComputador}\nO computador ganhou!`)
       }
-      
 
-      if (pontuacaoUsuario1 > pontuacaoComputador1 && pontuacaoUsuario1 < 21) {
+   } else
+
+      //o computador puxará cartas até enquanto ele tiver uma pontuação menor do que o jogador porém, caso seja >= 20, ele para
+
+
+
+
+      if (pontuacaoUsuario > pontuacaoComputador && pontuacaoUsuario < 21) {
          alert('O usuário ganhou!')
-      } else if (pontuacaoUsuario1 === pontuacaoComputador1) {
+      } else if (pontuacaoUsuario === pontuacaoComputador) {
          alert('Empate!')
-      } else if (pontuacaoUsuario1 < pontuacaoComputador1 && pontuacaoComputador1 < 21)
+      } else if (pontuacaoUsuario < pontuacaoComputador && pontuacaoComputador < 21)
          alert('O computador ganhou!')
-   }  else {
-      alert('O jogo acabou')
-   }
+} else {
+   alert('O jogo acabou')
+}
