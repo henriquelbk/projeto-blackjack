@@ -1,74 +1,57 @@
-if (confirm('Boas vindas ao jogo de BlackJack!\nQuer iniciar uma nova rodada?')) {
+const blackjack = () => {
 
-   //Primeira rodada
+   if (confirm('Boas vindas ao jogo de BlackJack!\nQuer iniciar uma nova rodada?')) {
 
-   let maoJogador = []
-   let maoComputador = []
+      // Primeira rodada
+      let maoJogador = [comprarCarta(), comprarCarta()]
+      let maoComputador = [comprarCarta(), comprarCarta()]
 
-   const cartaUsuario1 = comprarCarta()
-   const cartaUsuario2 = comprarCarta()
-   let pontuacaoUsuario = cartaUsuario1.valor + cartaUsuario2.valor
+      let pontuacaoUsuario = maoJogador[0].valor + maoJogador[1].valor
+      let pontuacaoComputador = maoComputador[0].valor + maoComputador[1].valor
 
-   const cartaComputador1 = comprarCarta()
-   const cartaComputador2 = comprarCarta()
-   let pontuacaoComputador = cartaComputador1.valor + cartaComputador2.valor
-
-   maoJogador.push(cartaUsuario1.valor, cartaUsuario2.valor)
-   maoComputador.push(cartaComputador1.valor, cartaComputador2.valor)
-
-
-   // Caso dos dois Ases
-
-   /* while (pontuacaoUsuario === 22) {
-
-      const cartaUsuario1 = comprarCarta()
-      const cartaUsuario2 = comprarCarta()
-      let pontuacaoUsuario = cartaUsuario1.valor + cartaUsuario2.valor
-
-      return pontuacaoUsuario
-   } */
-
-
-
-   if (confirm(`As suas cartas são: ${cartaUsuario1.texto} ${cartaUsuario2.texto}. A carta revelada do computador é ${cartaComputador1.texto}\nDeseja comprar mais uma carta?`)) {
-
-      //Segunda rodada
-
-      const cartaUsuario3 = comprarCarta()
-      pontuacaoUsuario = pontuacaoUsuario + cartaUsuario3.valor
-
-      maoJogador.push(cartaUsuario3.valor)
-
-      if (pontuacaoUsuario < 22) {
-
-         if (confirm(`As suas cartas são: ${cartaUsuario1.texto} ${cartaUsuario2.texto} ${cartaUsuario3.texto}. A carta revelada do computador é ${cartaComputador1.texto}\nDeseja comprar mais uma carta?`)) {
-            
-            // Aqui o jogador puxa a 4ª carta
-            const cartaUsuario4 = comprarCarta()
-            pontuacaoUsuario = pontuacaoUsuario + cartaUsuario4.valor
-
-            maoJogador.push(cartaUsuario4.valor)
-         }
-
-
-      } else {
-         
-         alert(`Usuário - Cartas ${cartaUsuario1.texto} ${cartaUsuario2.texto} ${cartaUsuario3.texto} - Pontuação: ${pontuacaoUsuario}\nComputador - Cartas ${cartaComputador1.texto} ${cartaComputador2.texto} - Pontuação: ${pontuacaoComputador}\nO computador ganhou!`)
+      // Caso dos dois Ases
+      if (pontuacaoUsuario === 22 || pontuacaoComputador === 22) {
+         blackjack()
+         return
       }
 
-   } else
+      // Segunda Rodada
+      let querComprar = confirm(`As suas cartas são: ${maoJogador[0].texto} ${maoJogador[1].texto}. A carta revelada do computador é ${maoComputador[0].texto}\nDeseja comprar mais uma carta?`)
 
-      //o computador puxará cartas até enquanto ele tiver uma pontuação menor do que o jogador porém, caso seja >= 20, ele para
+      while (querComprar) {
+         const cartaNova = comprarCarta()
+         pontuacaoUsuario += cartaNova.valor
+         maoJogador.push(cartaNova)
 
+         if (pontuacaoUsuario > 21) {
+            break
+         }
 
+         querComprar = confirm(`As suas cartas são: ${maoJogador.map(carta => carta.texto).join(' ')}. A carta revelada do computador é ${maoComputador[0].texto}\nDeseja comprar mais uma carta?`)
+      }
+      while (pontuacaoComputador < pontuacaoUsuario && pontuacaoComputador < 21) {
+         if (pontuacaoUsuario > 21) {
+            break
+         }
 
-
-      if (pontuacaoUsuario > pontuacaoComputador && pontuacaoUsuario < 21) {
-         alert('O usuário ganhou!')
+         const cartaNova = comprarCarta()
+         pontuacaoComputador += cartaNova.valor
+         maoComputador.push(cartaNova)
+      }
+      //o computador puxará cartas até enquanto ele tiver uma pontuação menor do que o jogador
+      if (pontuacaoUsuario > 21) {
+         alert(`Usuário - cartas: ${maoJogador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoUsuario}\nComputador - cartas: ${maoComputador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoComputador}\nO computador ganhou!`)
+      } else if (pontuacaoComputador > 21) {
+         alert(`Usuário - cartas: ${maoJogador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoUsuario}\nComputador - cartas: ${maoComputador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoComputador}\nO usuário ganhou!`)
+      } else if (pontuacaoUsuario > pontuacaoComputador) {
+         alert(`Usuário - cartas: ${maoJogador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoUsuario}\nComputador - cartas: ${maoComputador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoComputador}\nO usuário ganhou!`)
       } else if (pontuacaoUsuario === pontuacaoComputador) {
-         alert('Empate!')
-      } else if (pontuacaoUsuario < pontuacaoComputador && pontuacaoComputador < 21)
-         alert('O computador ganhou!')
-} else {
-   alert('O jogo acabou')
+         alert(`Usuário - cartas: ${maoJogador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoUsuario}\nComputador - cartas: ${maoComputador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoComputador}\nEmpate`)
+      } else {
+         alert(`Usuário - cartas: ${maoJogador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoUsuario}\nComputador - cartas: ${maoComputador.map(carta => carta.texto).join(' ')} - pontuação ${pontuacaoComputador}\nO computador ganhou!`)
+      }
+   } else {
+      alert('O jogo acabou')
+   }
 }
+blackjack()
